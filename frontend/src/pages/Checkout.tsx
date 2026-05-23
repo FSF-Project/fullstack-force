@@ -225,7 +225,7 @@ const Checkout = () => {
             {step === 2 && (
               <div>
                 <h2 className="mb-7 font-display text-4xl font-normal tracking-tight">
-                  Płatność i wybór metody. //zmiana z Platnosc.
+                  Płatność i wybór metody. 
                 </h2>
                 <div className="grid grid-cols-2 gap-x-5 gap-y-5">
                   <Field label="Numer karty" col="full">
@@ -275,7 +275,7 @@ const Checkout = () => {
 
           <aside className="rounded-lg border border-border bg-card p-7">
             <p className="mb-5 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-              Twoje zamówienie · {itemCount} szt.
+              Podsumowanie zamówienia · {itemCount} szt.
             </p>
             <div className="flex flex-col gap-4" style={{ maxHeight: 320, overflowY: "auto" }}>
               {cart.map((i) => (
