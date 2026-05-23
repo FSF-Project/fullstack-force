@@ -16,6 +16,31 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface Category {
+  id: number;
+  nazwa: string;
+}
+
+export interface Product {
+  id: number;
+  nazwa: string;
+  autor: string;
+  cena: number;
+  opis?: string;
+  ilosc: number;
+  categoryId: number;
+  category?: Category;
+}
+
+export interface CreateProductDto {
+  nazwa: string;
+  autor: string;
+  cena: number;
+  opis?: string;
+  ilosc: number;
+  categoryId: number;
+}
+
 export interface User {
   id: number;
   imie: string;
