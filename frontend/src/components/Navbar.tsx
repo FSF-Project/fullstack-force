@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { BookOpen } from "lucide-react";
 import CartSheet from "@/components/CartSheet";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { pathname } = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -35,6 +37,27 @@ const Navbar = () => {
               Katalog
             </Link>
           </nav>
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                Witaj, <span className="font-medium text-foreground">{user.imie}</span>
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                className="text-xs font-medium text-muted-foreground border border-border rounded-md px-3 py-1.5 transition-colors hover:text-foreground hover:border-foreground/30"
+              >
+                Wyloguj
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/logowanie"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Zaloguj się
+            </Link>
+          )}
           <CartSheet />
         </div>
       </div>
