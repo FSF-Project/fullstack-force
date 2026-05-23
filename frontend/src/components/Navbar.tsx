@@ -24,6 +24,16 @@ const Navbar = () => {
           >
             Katalog
           </Link>
+          {user && (
+            <Link
+              to="/admin"
+              className={`text-sm font-medium transition-colors hover:text-foreground ${
+                pathname === "/admin" ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Zarządzanie
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-3">
