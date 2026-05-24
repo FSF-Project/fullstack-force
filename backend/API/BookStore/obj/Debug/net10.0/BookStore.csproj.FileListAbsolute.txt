@@ -1,0 +1,9 @@
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.csproj.AssemblyReference.cache
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.AssemblyInfoInputs.cache
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.AssemblyInfo.cs
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.csproj.CoreCompileInputs.cache
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\fabia\Desktop\GitHub\fullstack-force\fullstack-force\backend\API\BookStore\obj\Debug\net10.0\BookStore.sourcelink.json

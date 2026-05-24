@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getAllBooks, getGenres, searchBooks } from "@/services/bookService";
 import { Book } from "@/services/types";
 import BookCard from "@/components/BookCard";
@@ -12,12 +12,28 @@ const Catalog = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [query, setQuery] = useState("");
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const allBooks = getAllBooks();
-  const genres = getGenres();
+  useEffect(() => {
+    getAllBooks()
+      .then((books) => {
+        setAllBooks(books);
+        setError(null);
+      })
+      .catch(() => {
+        setError("Nie udalo sie pobrac ksiazek z backendu.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const genres = useMemo(() => getGenres(allBooks), [allBooks]);
 
   const filteredBooks = useMemo(() => {
-    let result = query ? searchBooks(query) : allBooks;
+    let result = query ? searchBooks(allBooks, query) : allBooks;
     if (activeGenre) {
       result = result.filter((b) => b.genre === activeGenre);
     }
@@ -79,7 +95,15 @@ const Catalog = () => {
           </div>
         </div>
 
-        {filteredBooks.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground text-lg">Ladowanie ksiazek...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-16">
+            <p className="text-destructive text-lg">{error}</p>
+          </div>
+        ) : filteredBooks.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg">
               Nie znaleziono książek pasujących do wyszukiwania.

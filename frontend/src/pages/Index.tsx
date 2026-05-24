@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getAllBooks, getBookById } from "@/services/bookService";
 import { Book } from "@/services/types";
 import BookDetail from "@/components/BookDetail";
@@ -8,11 +8,23 @@ import HomeSection from "@/components/HomeSection";
 
 const Index = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
 
-  const featuredBook = getBookById("3");
-  const allBooks = getAllBooks();
-  const newArrivals = [...allBooks].sort((a, b) => b.year - a.year).slice(0, 4);
-  const classics = [...allBooks].sort((a, b) => a.year - b.year).slice(0, 4);
+  useEffect(() => {
+    getAllBooks()
+      .then(setAllBooks)
+      .catch(() => setAllBooks([]));
+  }, []);
+
+  const featuredBook = getBookById(allBooks, "3") ?? allBooks[0];
+  const newArrivals = useMemo(
+    () => [...allBooks].sort((a, b) => b.year - a.year).slice(0, 4),
+    [allBooks]
+  );
+  const classics = useMemo(
+    () => [...allBooks].sort((a, b) => a.year - b.year).slice(0, 4),
+    [allBooks]
+  );
 
   if (selectedBook) {
     return (

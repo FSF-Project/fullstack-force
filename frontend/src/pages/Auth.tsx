@@ -36,6 +36,7 @@ const Auth = () => {
   const [form, setForm] = useState(EMPTY_FORM);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +53,7 @@ const Auth = () => {
     setSubmitted(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
 
@@ -62,10 +63,12 @@ const Auth = () => {
       return;
     }
 
+    setIsSubmitting(true);
     const result =
       mode === "login"
-        ? login({ email: form.email.trim(), haslo: form.haslo })
-        : register({ imie: form.imie.trim(), nazwisko: form.nazwisko.trim(), email: form.email.trim(), haslo: form.haslo });
+        ? await login({ email: form.email.trim(), haslo: form.haslo })
+        : await register({ imie: form.imie.trim(), nazwisko: form.nazwisko.trim(), email: form.email.trim(), haslo: form.haslo });
+    setIsSubmitting(false);
 
     if ("error" in result) {
       setServerError(result.error);
@@ -184,7 +187,7 @@ const Auth = () => {
             <p className="text-sm text-destructive">{serverError}</p>
           )}
 
-          <Button type="submit" className="w-full mt-2">
+          <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
             {mode === "login" ? "Zaloguj się" : "Zarejestruj się"}
           </Button>
         </form>

@@ -32,6 +32,8 @@ const Admin = () => {
   const [form, setForm] = useState<CreateProductDto>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<Record<keyof CreateProductDto, string>>>({});
 
   useEffect(() => {
@@ -39,8 +41,24 @@ const Admin = () => {
       navigate("/logowanie");
       return;
     }
-    setProducts(getAllProducts());
-    setCategories(getCategories());
+    async function loadData() {
+      try {
+        setIsLoading(true);
+        setApiError(null);
+        const [loadedProducts, loadedCategories] = await Promise.all([
+          getAllProducts(),
+          getCategories(),
+        ]);
+        setProducts(loadedProducts);
+        setCategories(loadedCategories);
+      } catch (error) {
+        setApiError(error instanceof Error ? error.message : "Nie udalo sie pobrac danych");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
   }, [user, navigate]);
 
   const validate = (data: CreateProductDto) => {
@@ -89,25 +107,40 @@ const Admin = () => {
     setErrors({});
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const refreshProducts = async () => {
+    setProducts(await getAllProducts());
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate(form);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    if (editingId !== null) {
-      updateProduct(editingId, form);
-    } else {
-      createProduct(form);
+
+    try {
+      setApiError(null);
+      if (editingId !== null) {
+        await updateProduct(editingId, form);
+      } else {
+        await createProduct(form);
+      }
+      await refreshProducts();
+      handleClose();
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "Nie udalo sie zapisac ksiazki");
     }
-    setProducts(getAllProducts());
-    handleClose();
   };
 
-  const handleDelete = (id: number) => {
-    deleteProduct(id);
-    setProducts(getAllProducts());
+  const handleDelete = async (id: number) => {
+    try {
+      setApiError(null);
+      await deleteProduct(id);
+      await refreshProducts();
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "Nie udalo sie usunac ksiazki");
+    }
   };
 
   const fieldError = (name: keyof CreateProductDto) =>
@@ -119,11 +152,17 @@ const Admin = () => {
       <main className="container py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-foreground">Zarządzanie książkami</h1>
-          <Button onClick={openAdd} className="flex items-center gap-2">
+          <Button onClick={openAdd} className="flex items-center gap-2" disabled={categories.length === 0}>
             <Plus className="h-4 w-4" />
             Dodaj książkę
           </Button>
         </div>
+
+        {apiError && (
+          <p className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {apiError}
+          </p>
+        )}
 
         {showForm && (
           <div className="border border-border rounded-xl p-6 mb-6 bg-card">

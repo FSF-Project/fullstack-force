@@ -6,8 +6,8 @@ const SESSION_KEY = "auth_user";
 
 interface AuthContextValue {
   user: User | null;
-  login: (dto: LoginDto) => AuthResult;
-  register: (dto: CreateUserDto) => AuthResult;
+  login: (dto: LoginDto) => Promise<AuthResult>;
+  register: (dto: CreateUserDto) => Promise<AuthResult>;
   logout: () => void;
 }
 
@@ -21,8 +21,8 @@ function loadSession(): User | null {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(loadSession);
 
-  function login(dto: LoginDto): AuthResult {
-    const result = mockLogin(dto);
+  async function login(dto: LoginDto): Promise<AuthResult> {
+    const result = await mockLogin(dto);
     if ("user" in result) {
       setUser(result.user);
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(result.user));
@@ -30,8 +30,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return result;
   }
 
-  function register(dto: CreateUserDto): AuthResult {
-    const result = mockRegister(dto);
+  async function register(dto: CreateUserDto): Promise<AuthResult> {
+    const result = await mockRegister(dto);
     if ("user" in result) {
       setUser(result.user);
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(result.user));

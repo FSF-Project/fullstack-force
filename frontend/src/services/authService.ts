@@ -1,52 +1,41 @@
+import API_URL from "@/api/client";
 import { User, CreateUserDto, LoginDto } from "./types";
-
-type StoredUser = User & { haslo: string };
-
-const USERS_KEY = "mock_users";
-
-function getStoredUsers(): StoredUser[] {
-  const raw = localStorage.getItem(USERS_KEY);
-  return raw ? JSON.parse(raw) : [];
-}
-
-function saveStoredUsers(users: StoredUser[]): void {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function toPublicUser({ haslo: _haslo, ...user }: StoredUser): User {
-  return user;
-}
 
 export type AuthResult = { user: User } | { error: string };
 
-export function register(dto: CreateUserDto): AuthResult {
-  const users = getStoredUsers();
-
-  if (users.some((u) => u.email === dto.email)) {
-    return { error: "Email już istnieje" };
+async function handleAuthResponse(res: Response): Promise<AuthResult> {
+  if (!res.ok) {
+    const message = await res.text();
+    return { error: message || "Nie udalo sie polaczyc z API" };
   }
 
-  const newUser: StoredUser = {
-    id: Date.now(),
-    imie: dto.imie,
-    nazwisko: dto.nazwisko,
-    email: dto.email,
-    rola: "client",
-    haslo: dto.haslo,
-  };
-
-  saveStoredUsers([...users, newUser]);
-
-  return { user: toPublicUser(newUser) };
+  return { user: await res.json() };
 }
 
-export function login(dto: LoginDto): AuthResult {
-  const users = getStoredUsers();
-  const found = users.find((u) => u.email === dto.email && u.haslo === dto.haslo);
+export async function register(dto: CreateUserDto): Promise<AuthResult> {
+  try {
+    const res = await fetch(`${API_URL}/api/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dto),
+    });
 
-  if (!found) {
-    return { error: "Nieprawidłowy email lub hasło" };
+    return handleAuthResponse(res);
+  } catch {
+    return { error: "Brak polaczenia z API" };
   }
+}
 
-  return { user: toPublicUser(found) };
+export async function login(dto: LoginDto): Promise<AuthResult> {
+  try {
+    const res = await fetch(`${API_URL}/api/users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dto),
+    });
+
+    return handleAuthResponse(res);
+  } catch {
+    return { error: "Brak polaczenia z API" };
+  }
 }
