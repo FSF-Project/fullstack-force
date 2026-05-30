@@ -10,6 +10,8 @@ interface BookDetailProps {
 }
 
 const BookDetail = ({ book, onBack }: BookDetailProps) => {
+  const isOutOfStock = book.stock <= 0;
+
   return (
     <div className="space-y-8">
       <Button variant="ghost" onClick={onBack} className="gap-2">
@@ -48,15 +50,16 @@ const BookDetail = ({ book, onBack }: BookDetailProps) => {
             </span>
             <span>Rok wydania: {book.year}</span>
             <span>ISBN: {book.isbn}</span>
+            <span>Dostepne: {book.stock}</span>
           </div>
 
           <div className="flex items-center gap-6 pt-4 border-t border-border">
             <span className="font-display text-3xl font-bold text-primary">
               {book.price.toFixed(2)} zł
             </span>
-            <Button size="lg" onClick={() => addToCart(book)} className="gap-2">
+            <Button size="lg" onClick={() => addToCart(book)} disabled={isOutOfStock} className="gap-2">
               <ShoppingCart className="h-5 w-5" />
-              Dodaj do koszyka
+              {isOutOfStock ? "Brak w magazynie" : "Dodaj do koszyka"}
             </Button>
           </div>
         </div>

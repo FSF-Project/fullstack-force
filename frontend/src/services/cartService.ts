@@ -26,14 +26,27 @@ export function getCartTotal(): number {
   return cart.reduce((sum, item) => sum + item.book.price * item.quantity, 0);
 }
 
-export function addToCart(book: Book) {
+function maxQuantity(book: Book): number {
+  return Math.max(0, book.stock);
+}
+
+export function addToCart(book: Book): boolean {
+  const max = maxQuantity(book);
+  if (max === 0) {
+    return false;
+  }
+
   const existing = cart.find((item) => item.book.id === book.id);
   if (existing) {
+    if (existing.quantity >= max) {
+      return false;
+    }
     existing.quantity += 1;
   } else {
     cart.push({ book, quantity: 1 });
   }
   notify();
+  return true;
 }
 
 export function removeFromCart(bookId: string) {
@@ -48,7 +61,7 @@ export function updateQuantity(bookId: string, quantity: number) {
   }
   const item = cart.find((i) => i.book.id === bookId);
   if (item) {
-    item.quantity = quantity;
+    item.quantity = Math.min(quantity, maxQuantity(item.book));
     notify();
   }
 }

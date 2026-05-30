@@ -9,6 +9,8 @@ interface BookCardProps {
 }
 
 const BookCard = ({ book, onSelect }: BookCardProps) => {
+  const isOutOfStock = book.stock <= 0;
+
   return (
     <div
       className="cursor-pointer rounded-lg border border-border bg-card overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
@@ -35,15 +37,17 @@ const BookCard = ({ book, onSelect }: BookCardProps) => {
           </span>
           <Button
             size="sm"
+            disabled={isOutOfStock}
             onClick={(e) => {
               e.stopPropagation();
               addToCart(book);
             }}
           >
             <ShoppingCart className="mr-1 h-4 w-4" />
-            Dodaj
+            {isOutOfStock ? "Brak" : "Dodaj"}
           </Button>
         </div>
+        <p className="text-xs text-muted-foreground">Dostepne: {book.stock}</p>
       </div>
     </div>
   );

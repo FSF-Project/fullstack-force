@@ -9,6 +9,8 @@ interface ProductResponse {
   Autor?: string;
   cena?: number;
   Cena?: number;
+  ilosc?: number;
+  Ilosc?: number;
   opis?: string | null;
   Opis?: string | null;
   category?: {
@@ -32,6 +34,7 @@ function mapProductToBook(product: ProductResponse): Book {
     title: product.nazwa ?? product.Nazwa ?? "Bez tytulu",
     author: product.autor ?? product.Autor ?? "Nieznany autor",
     price: Number(product.cena ?? product.Cena ?? 0),
+    stock: Number(product.ilosc ?? product.Ilosc ?? 0),
     coverUrl: fallbackCoverUrl,
     description: product.opis ?? product.Opis ?? "Brak opisu.",
     genre: category?.nazwa ?? category?.Nazwa ?? "Bez kategorii",

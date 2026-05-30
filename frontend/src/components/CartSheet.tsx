@@ -51,6 +51,7 @@ const CartSheet = () => {
                       {item.book.title}
                     </h4>
                     <p className="text-xs text-muted-foreground">{item.book.author}</p>
+                    <p className="text-xs text-muted-foreground">Dostepne: {item.book.stock}</p>
                     <div className="mt-2 flex h-8 w-fit items-center rounded-sm border border-border">
                       <Button
                         variant="ghost"
@@ -67,6 +68,7 @@ const CartSheet = () => {
                         variant="ghost"
                         size="icon"
                         className="h-full w-8 rounded-none text-muted-foreground hover:text-foreground"
+                        disabled={item.quantity >= item.book.stock}
                         onClick={() => updateQuantity(item.book.id, item.quantity + 1)}
                       >
                         <Plus className="h-3 w-3" />
