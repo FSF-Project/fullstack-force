@@ -225,7 +225,7 @@ const Checkout = () => {
             {step === 2 && (
               <div>
                 <h2 className="mb-7 font-display text-4xl font-normal tracking-tight">
-                  Płatność i wybór metody. 
+                  Płatność i wybór metody 
                 </h2>
                 <div className="grid grid-cols-2 gap-x-5 gap-y-5">
                   <Field label="Numer karty" col="full">
