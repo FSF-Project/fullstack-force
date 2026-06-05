@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import { clearCart } from "@/services/cartService";
+import { addOrderToHistory, mapCartToOrderItems } from "@/services/orderHistoryService";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { ArrowLeft } from "lucide-react";
@@ -39,6 +40,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cart, total } = useCart();
   const [step, setStep] = useState(1);
+  const [isOrderSaved, setIsOrderSaved] = useState(false);
   const [orderNum] = useState(
     () => "ZAM-" + Math.random().toString(36).slice(2, 8).toUpperCase()
   );
@@ -66,6 +68,24 @@ const Checkout = () => {
     step === 1
       ? !!(form.email && form.name && form.address && form.city && form.zip)
       : !!(form.card && form.exp && form.cvc);
+
+  const completeOrder = () => {
+    if (!canContinue || isOrderSaved) return;
+
+    addOrderToHistory({
+      id: orderNum,
+      customerEmail: form.email,
+      customerName: form.name,
+      items: mapCartToOrderItems(cart),
+      subtotal: total,
+      shipping,
+      tax,
+      total: orderTotal,
+    });
+
+    setIsOrderSaved(true);
+    setStep(3);
+  };
 
   if (cart.length === 0 && step < 3) {
     return (
@@ -264,7 +284,7 @@ const Checkout = () => {
                   <Button
                     size="lg"
                     disabled={!canContinue}
-                    onClick={() => canContinue && setStep(3)}
+                    onClick={completeOrder}
                   >
                     Złóż zamówienie · {orderTotal.toFixed(2)} zł
                   </Button>

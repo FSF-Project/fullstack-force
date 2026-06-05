@@ -17,6 +17,35 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface OrderHistoryItem {
+  bookId: string;
+  title: string;
+  author: string;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderHistoryEntry {
+  id: string;
+  createdAt: string;
+  status: string;
+  customerEmail: string;
+  customerName: string;
+  items: OrderHistoryItem[];
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+}
+
+export interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export interface Category {
   id: number;
   nazwa: string;

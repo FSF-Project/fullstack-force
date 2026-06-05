@@ -24,6 +24,22 @@ const Navbar = () => {
           >
             Katalog
           </Link>
+          <Link
+            to="/opinie"
+            className={`text-sm font-medium transition-colors hover:text-foreground ${
+              pathname === "/opinie" ? "text-foreground" : "text-muted-foreground"
+            }`}
+          >
+            Opinie
+          </Link>
+          <Link
+            to="/historia-zamowien"
+            className={`text-sm font-medium transition-colors hover:text-foreground ${
+              pathname === "/historia-zamowien" ? "text-foreground" : "text-muted-foreground"
+            }`}
+          >
+            Historia
+          </Link>
           {user && (
             <Link
               to="/admin"
@@ -45,6 +61,14 @@ const Navbar = () => {
               }`}
             >
               Katalog
+            </Link>
+            <Link
+              to="/opinie"
+              className={`text-sm font-medium transition-colors hover:text-foreground ${
+                pathname === "/opinie" ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Opinie
             </Link>
           </nav>
           {user ? (
